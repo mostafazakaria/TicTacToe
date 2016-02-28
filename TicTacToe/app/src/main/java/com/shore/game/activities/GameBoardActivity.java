@@ -1,7 +1,9 @@
-package com.shore.game;
+package com.shore.game.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import com.shore.game.R;
 
 public class GameBoardActivity extends AppCompatActivity {
 
