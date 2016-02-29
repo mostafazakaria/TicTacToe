@@ -6,12 +6,10 @@
     android:layout_height="@dimen/item_game_cell_dimension"
     android:layout_margin="@dimen/item_cell_margin">
 
-    <TextView
+    <ImageView
         android:id="@+id/mark"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textColor="@color/colorPrimary"
-        android:gravity="center"
-        android:textSize="40dp"/>
+        android:layout_width="@dimen/mark_dimension"
+        android:layout_height="@dimen/mark_dimension"
+        android:layout_gravity="center"/>
 
 </android.support.v7.widget.CardView>

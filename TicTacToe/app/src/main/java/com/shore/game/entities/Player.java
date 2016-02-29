@@ -11,7 +11,13 @@ public class Player {
 
     public Player(String name, char mark) {
         this(String.valueOf(name.hashCode()), name, 0, new Date(), mark);
+    }
 
+    public Player(String id, String name, long score, Date lastGameDate) {
+        mId = id;
+        mName = name;
+        mScore = score;
+        mLastGameDate = lastGameDate;
     }
 
     public Player(String id, String name, long score, Date lastGameDate, char mark) {
@@ -21,7 +27,6 @@ public class Player {
         mLastGameDate = lastGameDate;
         mMark = mark;
     }
-
 
     public String getId() {
         return mId;
