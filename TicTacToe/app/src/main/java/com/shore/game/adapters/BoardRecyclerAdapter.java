@@ -10,14 +10,18 @@ import android.widget.TextView;
 
 import com.shore.game.R;
 import com.shore.game.entities.Game;
+import com.shore.game.interfaces.ICellCallback;
+import com.shore.game.utils.Constants;
 
 public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdapter.BoardViewHolder> {
     private final Context mContext;
-    private final char[][] mBoard;
+    private ICellCallback mCallback;
+    private char[][] mBoard;
 
-    public BoardRecyclerAdapter(Context context, char[][] board) {
+    public BoardRecyclerAdapter(Context context, char[][] board, ICellCallback callback) {
         mContext = context;
         mBoard = board;
+        mCallback = callback;
     }
 
     @Override
@@ -28,7 +32,17 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
 
     @Override
     public void onBindViewHolder(BoardViewHolder holder, int position) {
-        holder.mMark.setText(String.valueOf(mBoard[getRow(position)][getColumn(position)]));
+        final int row = getRow(position);
+        final int column = getColumn(position);
+        final String value = (mBoard[row][column] == Constants.MARK_DEFAULT) ? "" : String.valueOf(mBoard[row][column]);
+        holder.mMark.setText(value);
+        holder.mMark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mCallback != null && (mBoard[row][column] == Constants.MARK_DEFAULT))
+                    mCallback.onCellClicked(row, column);
+            }
+        });
     }
 
     private int getColumn(int position) {
@@ -42,6 +56,15 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
     @Override
     public int getItemCount() {
         return Game.BOARD_SIZE * Game.BOARD_SIZE;
+    }
+
+    public void notifyBoardChanged(char[][] board) {
+        mBoard = board;
+        notifyDataSetChanged();
+    }
+
+    public void setCallback(ICellCallback callback) {
+        mCallback = callback;
     }
 
     public static class BoardViewHolder extends RecyclerView.ViewHolder {
