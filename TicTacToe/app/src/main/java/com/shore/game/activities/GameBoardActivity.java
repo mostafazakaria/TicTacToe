@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.shore.game.R;
-import com.shore.game.controllers.PlayersController;
-import com.shore.game.entities.Player;
 import com.shore.game.fragments.GameBoardFragment;
+import com.shore.game.fragments.LeaderBoardDialog;
+import com.shore.game.interfaces.IGameBoardCallbacks;
+import com.shore.game.interfaces.ILeaderBoardCallbacks;
 
-public class GameBoardActivity extends AppCompatActivity {
+public class GameBoardActivity extends AppCompatActivity implements IGameBoardCallbacks, ILeaderBoardCallbacks {
     private final static String EXTRA_FIRST_PLAYER_NAME = "extra_first_player_name";
     private final static String EXTRA_SECOND_PLAYER_NAME = "extra_second_player_name";
 
@@ -34,6 +35,28 @@ public class GameBoardActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_FIRST_PLAYER_NAME, firstPlayerName);
         intent.putExtra(EXTRA_SECOND_PLAYER_NAME, secondPlayerName);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void onGameFinished() {
+        LeaderBoardDialog dialog = new LeaderBoardDialog(this);
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
+    @Override
+    public void onExitGameClicked() {
+        finish();
+    }
+
+    @Override
+    public void onPlayAgainClicked(boolean samePlayers) {
+        if (samePlayers) {
+                openGameBoardFragment(getIntent());
+        } else {
+            GameSetupActivity.start(this);
+            finish();
+        }
     }
 }
 

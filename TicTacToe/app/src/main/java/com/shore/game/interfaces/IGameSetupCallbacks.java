@@ -1,5 +1,5 @@
 package com.shore.game.interfaces;
 
-public interface IGameSetup {
+public interface IGameSetupCallbacks {
     void onSetupFinished(String firstPlayerName, String secondPlayerName);
 }

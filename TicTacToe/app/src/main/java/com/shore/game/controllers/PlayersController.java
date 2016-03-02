@@ -7,6 +7,9 @@ import com.shore.game.entities.Player;
 
 import java.util.ArrayList;
 
+/**
+ * A singleton instance controller for game players
+ */
 public class PlayersController {
     private static PlayersController sPlayersController;
     private PlayersDbHandler mPlayersDbHandler;
@@ -33,9 +36,7 @@ public class PlayersController {
     }
 
     public boolean savePlayer(Player player) {
-        if (player == null)
-            return false;
-        return mPlayersDbHandler.saveItem(mContext, player);
+        return player != null && mPlayersDbHandler.saveItem(mContext, player);
     }
 
     public ArrayList<Player> getPlayers() {

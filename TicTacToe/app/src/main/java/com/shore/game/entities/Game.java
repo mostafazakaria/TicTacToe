@@ -2,20 +2,25 @@ package com.shore.game.entities;
 
 import com.shore.game.utils.Constants;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Game {
     public static final int BOARD_SIZE = 3;
     private Player mFirstPlayer;
     private Player mSecondPlayer;
     private char mBoard[][];
     private int mWinner;
-    private int mCurrenPlayer;
+    private int mCurrentPlayer;
+    private Set<Integer> mWinnerPositions;
 
     public Game(Player firstPlayer, Player secondPlayer) {
         mFirstPlayer = firstPlayer;
         mSecondPlayer = secondPlayer;
         mWinner = -1;
-        mCurrenPlayer = -1;
+        mCurrentPlayer = -1;
         mBoard = new char[BOARD_SIZE][BOARD_SIZE];
+        mWinnerPositions = new HashSet<>();
         initBoard();
     }
 
@@ -52,31 +57,54 @@ public class Game {
     }
 
     public boolean checkBoardResult() {
-        if (scanBoardDimensions())
-            return true;
-        return scanBoardLeftDiagonal() || scanBoardRightDiagonal();
+        return (scanBoardHorizontally() || scanBoardVertically() || scanBoardLeftDiagonal() || scanBoardRightDiagonal());
     }
 
-    private boolean scanBoardDimensions() {
+    private boolean scanBoardHorizontally() {
         boolean firstPlayerRow = true;
         boolean secondPlayerRow = true;
-        boolean firstPlayerCol = true;
-        boolean secondPlayerCol = true;
         for (int i = 0; i < mBoard.length; i++) {
             for (int j = 0; j < mBoard[i].length; j++) {
                 firstPlayerRow &= mBoard[i][j] == Constants.MARK_FIRST_PLAYER;
                 secondPlayerRow &= mBoard[i][j] == Constants.MARK_SECOND_PLAYER;
+            }
+            if (firstPlayerRow) {
+                mWinner = 0;
+            } else if (secondPlayerRow) {
+                mWinner = 1;
+            }
+            if (firstPlayerRow || secondPlayerRow) {
+                mWinnerPositions.add(i * BOARD_SIZE);
+                mWinnerPositions.add(i * BOARD_SIZE + 1);
+                mWinnerPositions.add(i * BOARD_SIZE + 2);
+                return true;
+            }
+            firstPlayerRow = secondPlayerRow = true;
+        }
+        return false;
+    }
+
+    private boolean scanBoardVertically() {
+        boolean firstPlayerCol = true;
+        boolean secondPlayerCol = true;
+        for (int i = 0; i < mBoard.length; i++) {
+            int j;
+            for (j = 0; j < mBoard[i].length; j++) {
                 firstPlayerCol &= mBoard[j][i] == Constants.MARK_FIRST_PLAYER;
                 secondPlayerCol &= mBoard[j][i] == Constants.MARK_SECOND_PLAYER;
             }
-            if (firstPlayerRow || firstPlayerCol) {
+            if (firstPlayerCol) {
                 mWinner = 0;
-                return true;
-            } else if (secondPlayerRow || secondPlayerCol) {
+            } else if (secondPlayerCol) {
                 mWinner = 1;
+            }
+            if (firstPlayerCol || secondPlayerCol) {
+                mWinnerPositions.add(i);
+                mWinnerPositions.add(BOARD_SIZE + i);
+                mWinnerPositions.add(2 * BOARD_SIZE + i);
                 return true;
             }
-            firstPlayerRow = firstPlayerCol = secondPlayerRow = secondPlayerCol = true;
+            firstPlayerCol = secondPlayerCol = true;
         }
         return false;
     }
@@ -98,9 +126,13 @@ public class Game {
         }
         if (firstPlayerDiagonal) {
             mWinner = 0;
-            return true;
         } else if (secondPlayerDiagonal) {
             mWinner = 1;
+        }
+        if (firstPlayerDiagonal || secondPlayerDiagonal) {
+            mWinnerPositions.add(0);
+            mWinnerPositions.add(4);
+            mWinnerPositions.add(8);
             return true;
         }
         return false;
@@ -115,9 +147,13 @@ public class Game {
         }
         if (firstPlayerDiagonal) {
             mWinner = 0;
-            return true;
         } else if (secondPlayerDiagonal) {
             mWinner = 1;
+        }
+        if (firstPlayerDiagonal || secondPlayerDiagonal) {
+            mWinnerPositions.add(2);
+            mWinnerPositions.add(4);
+            mWinnerPositions.add(6);
             return true;
         }
         return false;
@@ -134,16 +170,20 @@ public class Game {
     }
 
     public void setMove(int row, int col) {
-        if (mCurrenPlayer == 0 || mCurrenPlayer == -1) {
+        if (mCurrentPlayer == 0 || mCurrentPlayer == -1) {
             mBoard[row][col] = mFirstPlayer.getMark();
-            mCurrenPlayer = 1;
-        } else if (mCurrenPlayer == 1) {
+            mCurrentPlayer = 1;
+        } else if (mCurrentPlayer == 1) {
             mBoard[row][col] = mSecondPlayer.getMark();
-            mCurrenPlayer = 0;
+            mCurrentPlayer = 0;
         }
     }
 
     public Player getCurrentPlayer() {
-        return (mCurrenPlayer == 0 || mCurrenPlayer == -1) ? mFirstPlayer : mSecondPlayer;
+        return (mCurrentPlayer == 0 || mCurrentPlayer == -1) ? mFirstPlayer : mSecondPlayer;
+    }
+
+    public Set<Integer> getWinnerPositions() {
+        return mWinnerPositions;
     }
 }

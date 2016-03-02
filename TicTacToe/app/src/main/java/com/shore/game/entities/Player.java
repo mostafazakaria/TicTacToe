@@ -1,30 +1,25 @@
 package com.shore.game.entities;
 
-import java.util.Date;
-
 public class Player {
     private String mId;
     private String mName;
     private long mScore;
-    private Date mLastGameDate;
     private char mMark;
 
     public Player(String name, char mark) {
-        this(String.valueOf(name.hashCode()), name, 0, new Date(), mark);
+        this(String.valueOf(name.hashCode()), name, 0, mark);
     }
 
-    public Player(String id, String name, long score, Date lastGameDate) {
+    public Player(String id, String name, long score) {
         mId = id;
         mName = name;
         mScore = score;
-        mLastGameDate = lastGameDate;
     }
 
-    public Player(String id, String name, long score, Date lastGameDate, char mark) {
+    public Player(String id, String name, long score, char mark) {
         mId = id;
         mName = name;
         mScore = score;
-        mLastGameDate = lastGameDate;
         mMark = mark;
     }
 
@@ -50,14 +45,6 @@ public class Player {
 
     public void setScore(long score) {
         mScore = score;
-    }
-
-    public Date getLastGameDate() {
-        return mLastGameDate;
-    }
-
-    public void setLastGameDate(Date lastGameDate) {
-        mLastGameDate = lastGameDate;
     }
 
     public char getMark() {

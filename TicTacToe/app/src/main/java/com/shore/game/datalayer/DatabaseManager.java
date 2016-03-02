@@ -32,8 +32,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     // Mark database connection should be closed or not
     private boolean mCloseConnecton = false;
     private final String TAG = "DatabaseManager";
-    private Map<Integer, ArrayList<String>> mCreationQueriesMap = new HashMap<Integer, ArrayList<String>>();
-    private ArrayList<String> mAlterQueries = new ArrayList<String>();
+    private Map<Integer, ArrayList<String>> mCreationQueriesMap = new HashMap<>();
+    private ArrayList<String> mAlterQueries = new ArrayList<>();
 
     private DatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -42,7 +42,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     private void initializeCreationQueriesMap() {
         // DB version 1 tables creation queries
-        ArrayList<String> dbVersion1Queries = new ArrayList<String>();
+        ArrayList<String> dbVersion1Queries = new ArrayList<>();
         PlayersDbHandler playersDbHandler = new PlayersDbHandler();
         dbVersion1Queries.add(playersDbHandler.getCreationQuery());
         mCreationQueriesMap.put(DATABASE_VERSION, dbVersion1Queries);
@@ -51,7 +51,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static synchronized DatabaseManager getInstance(Context context) throws Exception {
         if (sDatabaseManager == null) {
             // getDatabaseDirectory may throw exception if SD Card is unmounted
-            sDatabaseManager = new DatabaseManager(context);
+            sDatabaseManager = new DatabaseManager(context.getApplicationContext());
         }
         if (sDatabaseManager == null)
             throw new NullPointerException("Cannot Open Database Connection");
@@ -219,25 +219,23 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
     }
 
-    public void insert(String tableName, ContentValues row) {
+    public long insert(String tableName, ContentValues row) {
+        long result = -1;
         try {
             if (!sDatabase.isOpen())
                 openDatabase();
             if (sDatabase.isOpen() && !sDatabase.isReadOnly()) {
                 try {
                     sDatabase.beginTransactionNonExclusive();
-                    sDatabase.insert(tableName, null, row);
+                    result = sDatabase.insert(tableName, null, row);
                     sDatabase.setTransactionSuccessful();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "Player row already exists");
                 } finally {
                     sDatabase.endTransaction();
                 }
-            } else {
-                // TODO:: Handle returning status (success or fail)
             }
         } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             // Handle application closed and database connection marked as
             // should be closed
@@ -245,6 +243,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 closeConnection();
             }
         }
+        return result;
     }
 
     public void insertOrUpdate(String tableName, ArrayList<ContentValues> rows) {
@@ -312,7 +311,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * This method delete all the data from a certain table.
      *
      * @param tableName The table name that you want to delete all the data from it.
-     * @author tamawy
      */
     public void deleteAllFromTable(String tableName) {
         try {
@@ -343,7 +341,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * database)
      *
      * @param query :selection query to be executed
-     * @return
+     * @return cursor
      */
     public Cursor select(String query) {
         Cursor cursor = null;

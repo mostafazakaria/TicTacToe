@@ -47,7 +47,7 @@ public abstract class DBHandler<T> {
      * @param cursor :A pointer on Dataset
      */
     protected ArrayList<T> parseDataSet(Cursor cursor) {
-        return new ArrayList<T>();
+        return new ArrayList<>();
     }
 
 

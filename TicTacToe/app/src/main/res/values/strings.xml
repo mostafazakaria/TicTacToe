@@ -7,4 +7,10 @@
     <string name="second_player_name_error">Please type a valid name for the second player</string>
     <string name="same_players_names_error">Players names cannot be the same</string>
     <string name="game_turn">\'s turn!</string>
+    <string name="exit_button_title">Exit</string>
+    <string name="play_again_button_title">Play Again!</string>
+    <string name="leader_board_title">Leaderboard</string>
+    <string name="play_again_dialog_message">Play again with the same players ?</string>
+    <string name="option_yes">Yes</string>
+    <string name="option_no">No</string>
 </resources>

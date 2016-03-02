@@ -1,12 +1,14 @@
 package com.shore.game.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.shore.game.R;
-import com.shore.game.interfaces.IGameSetup;
+import com.shore.game.interfaces.IGameSetupCallbacks;
 
-public class GameSetupActivity extends AppCompatActivity implements IGameSetup {
+public class GameSetupActivity extends AppCompatActivity implements IGameSetupCallbacks {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,7 +18,12 @@ public class GameSetupActivity extends AppCompatActivity implements IGameSetup {
 
     @Override
     public void onSetupFinished(String firstPlayerName, String secondPlayerName) {
-        GameBoardActivity.start(this,firstPlayerName,secondPlayerName);
+        GameBoardActivity.start(this, firstPlayerName, secondPlayerName);
         finish();
+    }
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, GameSetupActivity.class);
+        context.startActivity(intent);
     }
 }

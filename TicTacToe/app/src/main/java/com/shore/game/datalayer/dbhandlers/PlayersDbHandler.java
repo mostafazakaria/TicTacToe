@@ -10,14 +10,12 @@ import com.shore.game.entities.Player;
 import com.shore.game.utils.Log;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class PlayersDbHandler extends DBHandler<Player> {
     private static final String TABLE_PLAYERS = "Players";
     private static final String COL_PLAYER_ID = "id";
     private static final String COL_PLAYER_NAME = "name";
     private static final String COL_PLAYER_SCORE = "score";
-    private static final String COL_PLAYER_LAST_GAME_DATE = "last_game_date";
     private static final String TAG = "PlayersDbHandler";
 
     @Override
@@ -25,8 +23,7 @@ public class PlayersDbHandler extends DBHandler<Player> {
         return "CREATE TABLE IF NOT EXISTS " + TABLE_PLAYERS + " ( "
                 + COL_PLAYER_ID + " TEXT PRIMARY KEY, "
                 + COL_PLAYER_NAME + " TEXT, "
-                + COL_PLAYER_SCORE + " INTEGER, "
-                + COL_PLAYER_LAST_GAME_DATE + " TEXT); ";
+                + COL_PLAYER_SCORE + " INTEGER ); ";
     }
 
     @Override
@@ -37,6 +34,10 @@ public class PlayersDbHandler extends DBHandler<Player> {
     @Override
     protected String getSelectQuery() {
         return "SELECT * FROM " + TABLE_PLAYERS + " ORDER BY " + COL_PLAYER_SCORE + " DESC";
+    }
+
+    private String getUpdateScoreQuery(String id, long score) {
+        return "UPDATE " + TABLE_PLAYERS + " SET " + COL_PLAYER_SCORE + " = " + COL_PLAYER_SCORE + " + " + score + " WHERE " + COL_PLAYER_ID + " = '" + id + "'";
     }
 
     private String getSelectQuery(String id) {
@@ -56,10 +57,13 @@ public class PlayersDbHandler extends DBHandler<Player> {
         row.put(COL_PLAYER_ID, player.getId());
         row.put(COL_PLAYER_NAME, player.getName());
         row.put(COL_PLAYER_SCORE, player.getScore());
-        row.put(COL_PLAYER_LAST_GAME_DATE, player.getLastGameDate().getTime());
 
         try {
-            return DatabaseManager.getInstance(context).insertOrUpdate(TABLE_PLAYERS, row);
+            long result = DatabaseManager.getInstance(context).insert(TABLE_PLAYERS, row);
+            //Row already exists, so update user score
+            if (result == -1) {
+                DatabaseManager.getInstance(context).executeQuery(getUpdateScoreQuery(player.getId(), player.getScore()));
+            }
         } catch (Exception e) {
             Log.e(TAG, "Error while inserting player row", e);
         }
@@ -77,8 +81,7 @@ public class PlayersDbHandler extends DBHandler<Player> {
                         String id = cursor.getString(cursor.getColumnIndex(COL_PLAYER_ID));
                         String name = cursor.getString(cursor.getColumnIndex(COL_PLAYER_NAME));
                         long score = cursor.getLong(cursor.getColumnIndex(COL_PLAYER_SCORE));
-                        long lastGameDate = cursor.getLong(cursor.getColumnIndex(COL_PLAYER_LAST_GAME_DATE));
-                        players.add(new Player(id, name, score, new Date(lastGameDate)));
+                        players.add(new Player(id, name, score));
                     } while (cursor.moveToNext());
                 } catch (Exception e) {
                     Log.e(TAG, "Error while retrieving players rows", e);
@@ -101,9 +104,7 @@ public class PlayersDbHandler extends DBHandler<Player> {
                     String id = cursor.getString(cursor.getColumnIndex(COL_PLAYER_ID));
                     String name = cursor.getString(cursor.getColumnIndex(COL_PLAYER_NAME));
                     long score = cursor.getLong(cursor.getColumnIndex(COL_PLAYER_SCORE));
-                    long lastGameDate = cursor.getLong(cursor.getColumnIndex(COL_PLAYER_LAST_GAME_DATE));
-
-                    player = new Player(id, name, score, new Date(lastGameDate));
+                    player = new Player(id, name, score);
                 } catch (Exception e) {
                     Log.e(TAG, "Error while retrieving player row", e);
                 } finally {

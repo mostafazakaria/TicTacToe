@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shore.game.R;
@@ -32,7 +33,7 @@ public class LeaderBoardRecyclerAdapter extends RecyclerView.Adapter<LeaderBoard
         Player player = mPlayers.get(position);
         holder.playerName.setText(player.getName());
         holder.playerScore.setText(String.valueOf(player.getScore()));
-        holder.playerLastGameDate.setText(player.getLastGameDate().toString());
+        holder.leaderFlag.setVisibility((position > 0) ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -43,13 +44,14 @@ public class LeaderBoardRecyclerAdapter extends RecyclerView.Adapter<LeaderBoard
     public static class LeaderBoardViewHolder extends RecyclerView.ViewHolder {
         public TextView playerName;
         public TextView playerScore;
-        public TextView playerLastGameDate;
+        public ImageView leaderFlag;
 
         public LeaderBoardViewHolder(View itemView) {
             super(itemView);
             playerName = (TextView) itemView.findViewById(R.id.player_name);
             playerScore = (TextView) itemView.findViewById(R.id.player_score);
-            playerLastGameDate = (TextView) itemView.findViewById(R.id.player_last_game_date);
+            leaderFlag = (ImageView) itemView.findViewById(R.id.leader_flag);
+
         }
     }
 }

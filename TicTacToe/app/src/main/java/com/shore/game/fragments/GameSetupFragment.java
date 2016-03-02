@@ -9,17 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.shore.game.R;
-import com.shore.game.interfaces.IGameSetup;
+import com.shore.game.interfaces.IGameSetupCallbacks;
 
 public class GameSetupFragment extends Fragment {
     private EditText mFirstPlayerEditText;
     private EditText mSecondPlayerEditText;
     private Button mGoButton;
-    private IGameSetup mCallbacks;
+    private IGameSetupCallbacks mCallbacks;
     private String mFirstPlayerName;
     private String mSecondPlayerName;
 
@@ -34,8 +33,8 @@ public class GameSetupFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof IGameSetup)
-            mCallbacks = (IGameSetup) context;
+        if (context instanceof IGameSetupCallbacks)
+            mCallbacks = (IGameSetupCallbacks) context;
     }
 
     @Override
@@ -47,7 +46,7 @@ public class GameSetupFragment extends Fragment {
     private void initViews(View view) {
         mFirstPlayerEditText = (EditText) view.findViewById(R.id.first_player_name);
         mSecondPlayerEditText = (EditText) view.findViewById(R.id.second_player_name);
-        mGoButton = (Button) view.findViewById(R.id.go_button);
+        mGoButton = (Button) view.findViewById(R.id.new_game_button);
 
         mGoButton.setOnClickListener(new View.OnClickListener() {
             @Override

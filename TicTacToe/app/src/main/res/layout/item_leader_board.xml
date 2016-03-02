@@ -1,46 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginBottom="1dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
+    android:background="@android:color/transparent"
+    card_view:cardCornerRadius="2dp"
+    card_view:cardElevation="1dp"
+    card_view:cardUseCompatPadding="true">
 
-    <ImageView
-        android:id="@+id/player_avatar"
-        android:layout_width="@dimen/item_leader_board_height"
-        android:layout_height="@dimen/item_leader_board_height"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/icon_player"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/player_avatar"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/player_name"
+        <ImageView
+            android:id="@+id/player_avatar"
+            android:layout_width="@dimen/item_leader_board_height"
+            android:layout_height="@dimen/item_leader_board_height"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_player"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/item_leader_board_height"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/player_avatar"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/player_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Mostafa"/>
+
+            <TextView
+                android:id="@+id/player_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="150"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/leader_flag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:maxLines="1"
-            android:text="Mostafa"/>
-
-        <TextView
-            android:id="@+id/player_score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:maxLines="1"
-            android:text="150"/>
-
-        <TextView
-            android:id="@+id/player_last_game_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:maxLines="1"
-            android:text="15 Feb 2016"/>
-    </LinearLayout>
-</RelativeLayout>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:visibility="gone"
+            android:src="@drawable/icon_leader_player"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

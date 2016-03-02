@@ -1,10 +1,8 @@
 package com.shore.game.fragments;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,24 +10,38 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.shore.game.R;
 import com.shore.game.adapters.BoardRecyclerAdapter;
+import com.shore.game.controllers.PlayersController;
 import com.shore.game.entities.Game;
 import com.shore.game.entities.Player;
-import com.shore.game.interfaces.ICellCallback;
+import com.shore.game.interfaces.ICellCallbacks;
+import com.shore.game.interfaces.IGameBoardCallbacks;
 import com.shore.game.utils.Constants;
 
-public class GameBoardFragment extends Fragment implements ICellCallback {
+import java.util.Set;
+
+public class GameBoardFragment extends Fragment implements ICellCallbacks {
     private static final String ARG_FIRST_PLAYER = "arg_first_player";
     private static final String ARG_SECOND_PLAYER = "arg_second_player";
-    private RecyclerView mBoardRecyclerView;
+    private static final long SHOW_LEADER_BOARD_DELAY = 3000;
     private BoardRecyclerAdapter mBoardAdapter;
+    private RecyclerView mBoardRecyclerView;
+    private IGameBoardCallbacks mCallbacks;
     private TextView mCurrentPlayer;
     private Game mGame;
+    private Handler mHandler;
+    private final Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mCallbacks != null)
+                mCallbacks.onGameFinished();
+        }
+    };
 
     public static GameBoardFragment newInstance(String firstPlayer, String secondPlayer) {
         GameBoardFragment fragment = new GameBoardFragment();
@@ -38,6 +50,19 @@ public class GameBoardFragment extends Fragment implements ICellCallback {
         bundle.putString(ARG_SECOND_PLAYER, secondPlayer);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof IGameBoardCallbacks)
+            mCallbacks = (IGameBoardCallbacks) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
     }
 
     @Nullable
@@ -60,8 +85,9 @@ public class GameBoardFragment extends Fragment implements ICellCallback {
     }
 
     private void setViews() {
-        if (mGame != null)
+        if (mGame != null) {
             mCurrentPlayer.setText(mGame.getCurrentPlayer().getName() + getActivity().getString(R.string.game_turn));
+        }
     }
 
     private void initGameBoard() {
@@ -74,18 +100,57 @@ public class GameBoardFragment extends Fragment implements ICellCallback {
 
     @Override
     public void onCellClicked(int row, int col) {
+        Set<Integer> winnerPositions = null;
         mGame.setMove(row, col);
         if (mGame.checkBoardResult()) {
             Player winner = mGame.getWinner();
+            winnerPositions = mGame.getWinnerPositions();
             if (winner != null) {
-                Toast.makeText(getActivity(), winner.getName() + " (" + winner.getMark() + ") Winner is !!", Toast.LENGTH_LONG).show();
+                displayGameResult("Winner is " + winner.getName() + "!!");
                 mBoardAdapter.setCallback(null);
+                saveGameResult(winner);
+                showLeaderBoard();
             }
         } else if (mGame.isBoardFull()) {
+            displayGameResult("Game is Draw !!");
             mBoardAdapter.setCallback(null);
-            Toast.makeText(getActivity(), " Draw !!", Toast.LENGTH_SHORT).show();
+            saveGameResult(null);
+            showLeaderBoard();
+        } else {
+            setViews();
         }
-        mCurrentPlayer.setText(mGame.getCurrentPlayer().getName() + getActivity().getString(R.string.game_turn));
-        mBoardAdapter.notifyBoardChanged(mGame.getBoard());
+        mBoardAdapter.notifyBoardChanged(mGame.getBoard(), winnerPositions);
+    }
+
+    private void showLeaderBoard() {
+        mHandler = new Handler();
+        mHandler.postDelayed(mRunnable, SHOW_LEADER_BOARD_DELAY);
+    }
+
+    private void saveGameResult(Player winner) {
+        if (winner == null) {
+            mGame.getFirstPlayer().setScore(mGame.getFirstPlayer().getScore() + Constants.DRAW_POINTS);
+            mGame.getSecondPlayer().setScore(mGame.getSecondPlayer().getScore() + Constants.DRAW_POINTS);
+        } else if (mGame.getFirstPlayer().getId().equals(winner.getId())) {
+            mGame.getFirstPlayer().setScore(mGame.getFirstPlayer().getScore() + Constants.WIN_POINTS);
+        } else if (mGame.getSecondPlayer().getId().equals(winner.getId())) {
+            mGame.getSecondPlayer().setScore(mGame.getSecondPlayer().getScore() + Constants.WIN_POINTS);
+        }
+        PlayersController.getInstance(getActivity()).savePlayer(mGame.getFirstPlayer());
+        PlayersController.getInstance(getActivity()).savePlayer(mGame.getSecondPlayer());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mHandler != null)
+            mHandler.removeCallbacksAndMessages(null);
+    }
+
+    public void displayGameResult(String gameResult) {
+        mCurrentPlayer.setText(gameResult);
+        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.cell_animation);
+        mCurrentPlayer.startAnimation(animation);
     }
 }
+
