@@ -34,9 +34,14 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
     public void onBindViewHolder(BoardViewHolder holder, int position) {
         final int row = getRow(position);
         final int column = getColumn(position);
-        final String value = (mBoard[row][column] == Constants.MARK_DEFAULT) ? "" : String.valueOf(mBoard[row][column]);
-        holder.mMark.setText(value);
-        holder.mMark.setOnClickListener(new View.OnClickListener() {
+        if (mBoard[row][column] == Constants.MARK_FIRST_PLAYER)
+            holder.mMark.setBackgroundResource(R.drawable.icon_first_player);
+        else if (mBoard[row][column] == Constants.MARK_SECOND_PLAYER)
+            holder.mMark.setBackgroundResource(R.drawable.icon_second_player);
+        else
+            holder.mMark.setBackgroundResource(0);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mCallback != null && (mBoard[row][column] == Constants.MARK_DEFAULT))
@@ -68,11 +73,11 @@ public class BoardRecyclerAdapter extends RecyclerView.Adapter<BoardRecyclerAdap
     }
 
     public static class BoardViewHolder extends RecyclerView.ViewHolder {
-        public TextView mMark;
+        public ImageView mMark;
 
         public BoardViewHolder(View itemView) {
             super(itemView);
-            mMark = (TextView) itemView.findViewById(R.id.mark);
+            mMark = (ImageView) itemView.findViewById(R.id.mark);
         }
     }
 }

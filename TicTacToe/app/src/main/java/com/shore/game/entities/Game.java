@@ -142,4 +142,8 @@ public class Game {
             mCurrenPlayer = 0;
         }
     }
+
+    public Player getCurrentPlayer() {
+        return (mCurrenPlayer == 0 || mCurrenPlayer == -1) ? mFirstPlayer : mSecondPlayer;
+    }
 }

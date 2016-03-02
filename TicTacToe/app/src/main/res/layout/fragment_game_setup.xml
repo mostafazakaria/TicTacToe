@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="@dimen/app_icon_dimension"
+        android:layout_height="@dimen/app_icon_dimension"
+        android:layout_gravity="center"
+        android:src="@drawable/app_icon"/>
+
+    <EditText
+        android:id="@+id/first_player_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:drawableLeft="@drawable/icon_first_player"
+        android:drawablePadding="10dp"
+        android:hint="@string/first_player_text"
+        android:lines="1"
+        android:paddingLeft="10dp"
+        android:singleLine="true"/>
+
+    <EditText
+        android:id="@+id/second_player_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:drawableLeft="@drawable/icon_second_player"
+        android:drawablePadding="10dp"
+        android:hint="@string/second_player_text"
+        android:lines="1"
+        android:paddingLeft="10dp"
+        android:singleLine="true"/>
+
+    <Button
+        android:id="@+id/go_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/go_background"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:text="@string/go_button_title"
+        android:textColor="@android:color/white"/>
+</LinearLayout>

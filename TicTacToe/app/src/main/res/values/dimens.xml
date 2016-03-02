@@ -2,7 +2,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="item_game_cell_dimension">100dp</dimen>
+    <dimen name="game_board_height">320dp</dimen>
     <dimen name="item_leader_board_height">100dp</dimen>
     <dimen name="item_cell_margin">3dp</dimen>
     <dimen name="mark_dimension">48dp</dimen>
+    <dimen name="app_icon_dimension">150dp</dimen>
 </resources>

@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Tic Tac Toe</string>
+    <string name="first_player_text">First Player</string>
+    <string name="second_player_text">Second Player</string>
+    <string name="go_button_title">Go</string>
+    <string name="first_player_name_error">Please type a valid name for the first player</string>
+    <string name="second_player_name_error">Please type a valid name for the second player</string>
+    <string name="same_players_names_error">Players names cannot be the same</string>
+    <string name="game_turn">\'s turn!</string>
 </resources>
