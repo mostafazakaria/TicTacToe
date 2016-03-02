@@ -13,4 +13,7 @@
     <string name="play_again_dialog_message">Play again with the same players ?</string>
     <string name="option_yes">Yes</string>
     <string name="option_no">No</string>
+    <string name="winner_is">"Winner is "</string>
+    <string name="execlamation_marks">!!</string>
+    <string name="game_is_draw">Game is Draw !!</string>
 </resources>

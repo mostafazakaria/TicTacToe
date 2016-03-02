@@ -106,13 +106,13 @@ public class GameBoardFragment extends Fragment implements ICellCallbacks {
             Player winner = mGame.getWinner();
             winnerPositions = mGame.getWinnerPositions();
             if (winner != null) {
-                displayGameResult("Winner is " + winner.getName() + "!!");
+                displayGameResult(getActivity().getString(R.string.winner_is) + winner.getName() + getActivity().getString(R.string.execlamation_marks));
                 mBoardAdapter.setCallback(null);
                 saveGameResult(winner);
                 showLeaderBoard();
             }
         } else if (mGame.isBoardFull()) {
-            displayGameResult("Game is Draw !!");
+            displayGameResult(getActivity().getString(R.string.game_is_draw));
             mBoardAdapter.setCallback(null);
             saveGameResult(null);
             showLeaderBoard();
