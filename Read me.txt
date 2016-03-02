@@ -1,4 +1,10 @@
 # TicTacToe
+Game tested on devices:
+-LG Nexus 4 Lollipop.
+-Samsung Galaxy S5.
+-LG G2
+-Also tested on multiple emualtor instances with differnet android versions and screen sizes.
+
 Here is the list of future tasks which I would do if I have more time:
 -Add more graphics and animations.
 -Make each user chooses his favorite mark.
